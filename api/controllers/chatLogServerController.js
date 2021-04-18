@@ -5,13 +5,18 @@ var mongoose = require('mongoose'),
 
 exports.get_chatLog = function(req, res) {
 	if(!req.query.limit){
-		req.query.limit=10;		
+		req.query.limit=10;	
+
 	}
+	if(!req.query.start){
+		req.query.start=0;
+	}
+
 	ChatLog.find({user: req.params.userId}, function(err,chatlog) {
 		if (err)
 			res.send(err);
 		res.json(chatlog);
-	}).limit(parseInt(req.query.limit)).sort({ timestamp: -1 });
+	}).skip(parseInt(req.query.start)*parseInt(req.query.limit)).limit(parseInt(req.query.limit)).sort({ timestamp: -1 });
 };
 
 exports.create_chatLog = function(req, res) {
